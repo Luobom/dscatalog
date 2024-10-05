@@ -3,6 +3,8 @@ package com.w3lsolucoes.dscatalog.controllers;
 import com.w3lsolucoes.dscatalog.dto.CategoryDTO;
 import com.w3lsolucoes.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,13 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> findAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll(pageable));
+    }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<Page<CategoryDTO>> searchByName(@RequestParam String name, Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.searchByName(name, pageable));
     }
 
     @GetMapping(value = "/{id}")
