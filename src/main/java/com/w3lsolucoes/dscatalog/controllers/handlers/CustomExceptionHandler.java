@@ -25,5 +25,5 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
-    
+
 }
