@@ -1,7 +1,7 @@
 package com.w3lsolucoes.dscatalog.repositories;
 
 import com.w3lsolucoes.dscatalog.entities.Product;
-import com.w3lsolucoes.dscatalog.repositories.factories.Factory;
+import com.w3lsolucoes.dscatalog.factories.Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,4 +56,27 @@ public class ProductRepositoryTests {
         assertEquals(countTotalProducts + 1, product.getId());
 
     }
+
+    @Test
+    public void findByIdShouldReturnNonEmptyOptionalWhenIdExists() {
+        // Arrange
+
+        // Act
+        Optional<Product> result = repository.findById(existingId);
+
+        // Assert
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void findByIdShouldReturnEmptyOptionalWhenIdDoesNotExist() {
+        // Arrange
+
+        // Act
+        Optional<Product> result = repository.findById(nonExistingId);
+
+        // Assert
+        assertTrue(result.isEmpty());
+    }
+
 }

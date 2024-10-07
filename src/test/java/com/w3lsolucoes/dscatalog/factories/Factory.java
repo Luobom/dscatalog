@@ -1,4 +1,4 @@
-package com.w3lsolucoes.dscatalog.repositories.factories;
+package com.w3lsolucoes.dscatalog.factories;
 
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
 import com.w3lsolucoes.dscatalog.entities.Category;
