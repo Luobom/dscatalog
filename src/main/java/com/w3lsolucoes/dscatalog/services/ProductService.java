@@ -7,12 +7,10 @@ import com.w3lsolucoes.dscatalog.entities.Category;
 import com.w3lsolucoes.dscatalog.entities.Product;
 import com.w3lsolucoes.dscatalog.repositories.ProductRepository;
 
-import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -78,14 +76,9 @@ public class ProductService {
     @Transactional /*(propagation = Propagation.SUPPORTS)*/
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("resource not found");
+            throw new ResourceNotFoundException("Resource not found with id " + id);
         }
-        try {
-            repository.deleteById(id);
-            repository.flush();
-        } catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Integrity violation");
-        }
+        repository.deleteById(id);
     }
 
 
