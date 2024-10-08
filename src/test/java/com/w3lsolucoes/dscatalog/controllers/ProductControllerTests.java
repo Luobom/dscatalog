@@ -101,5 +101,18 @@ public class ProductControllerTests {
         ;
     }
 
+    @Test
+    public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
+
+        String jsonBody = jacksonObjectMapper.writeValueAsString(Factory.createProductDTO());
+
+        mockMvc.perform(put("/products/{id}", nonExistingId)
+                .content(jsonBody)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+        ;
+    }
+
 
 }
