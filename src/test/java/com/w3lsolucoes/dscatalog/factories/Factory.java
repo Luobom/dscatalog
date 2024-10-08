@@ -1,6 +1,7 @@
 package com.w3lsolucoes.dscatalog.factories;
 
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
+import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
 import com.w3lsolucoes.dscatalog.entities.Category;
 import com.w3lsolucoes.dscatalog.entities.Product;
 
@@ -22,6 +23,11 @@ public class Factory {
     public static ProductDTO createProductDTO() {
         Product product = createProduct();
         return new ProductDTO(product);
+    }
+
+    public static ProductMinDTO createProductMinDTO() {
+        Product product = createProduct();
+        return new ProductMinDTO(product);
     }
 
 
