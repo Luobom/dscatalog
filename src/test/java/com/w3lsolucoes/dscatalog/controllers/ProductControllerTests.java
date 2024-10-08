@@ -3,6 +3,7 @@ package com.w3lsolucoes.dscatalog.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.w3lsolucoes.dscatalog.factories.Factory;
 import com.w3lsolucoes.dscatalog.services.ProductService;
+import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,7 +20,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -35,6 +37,8 @@ public class ProductControllerTests {
 
     private Long existingId;
     private Long nonExistingId;
+    private Long dependentId;
+
     @Autowired
     private ObjectMapper jacksonObjectMapper;
 
@@ -42,6 +46,8 @@ public class ProductControllerTests {
     void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 2L;
+        dependentId = 3L;
+
 
         when(service.findAllPaged(any())).thenReturn(new PageImpl<>(List.of(Factory.createProductMinDTO())));
         when(service.findById(existingId)).thenReturn(Factory.createProductDTO());
@@ -51,6 +57,10 @@ public class ProductControllerTests {
 //        when(service.save(ArgumentMatchers.any())).thenReturn(Factory.createProductDTO());
         when(service.update(eq(existingId), ArgumentMatchers.any())).thenReturn(Factory.createProductDTO());
         when(service.update(eq(nonExistingId), ArgumentMatchers.any())).thenThrow(ResourceNotFoundException.class);
+
+        doNothing().when(service).delete(existingId);
+        doThrow(ResourceNotFoundException.class).when(service).delete(nonExistingId);
+        doThrow(DataBaseException.class).when(service).delete(dependentId);
 
     }
 
