@@ -47,7 +47,7 @@ public class ProductServiceTests {
 
     @BeforeEach
     void setUp() throws Exception {
-        existingId = 1L;
+        existingId = 5000L;
         nonExistingId = 1000L;
         dependentId = 4L;
         product = Factory.createProduct();
@@ -55,8 +55,6 @@ public class ProductServiceTests {
         page = new PageImpl<>(List.of(product));
         name = "Phone";
         inexistentName = "Camera";
-
-
 
         // Obs : O método findAll() retorna um objeto do tipo Page.
         Mockito.when(repository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
