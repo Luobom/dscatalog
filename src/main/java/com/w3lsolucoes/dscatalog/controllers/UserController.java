@@ -1,8 +1,8 @@
 package com.w3lsolucoes.dscatalog.controllers;
 
-import com.w3lsolucoes.dscatalog.dto.ProductDTO;
-import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
-import com.w3lsolucoes.dscatalog.services.ProductService;
+import com.w3lsolucoes.dscatalog.dto.UserDTO;
+import com.w3lsolucoes.dscatalog.dto.UserInsertDTO;
+import com.w3lsolucoes.dscatalog.services.UserService;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,40 +17,36 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/products")
-public class ProductController {
+@RequestMapping(value = "/users")
+public class UserController {
 
-    private final ProductService service;
+    private final UserService service;
 
-    public ProductController(ProductService service) {
+    public UserController(UserService service) {
         this.service = service;
     }
 
-    @GetMapping
-    public ResponseEntity<Page<ProductMinDTO>> findAll(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAllPaged(pageable));
-    }
 
-    @GetMapping(value = "/search")
-    public ResponseEntity<Page<ProductMinDTO>> searchByName(@RequestParam String name, Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.searchByName(name, pageable));
+    @GetMapping
+    public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
+        return ResponseEntity.ok(service.findAllPaged(pageable));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> save(@Valid @RequestBody ProductDTO dto) {
-        ProductDTO productDTO = service.save(dto);
+    public ResponseEntity<UserDTO> save(@RequestBody UserInsertDTO dto) {
+        UserDTO userDTO = service.save(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(productDTO.id()).toUri();
-        return ResponseEntity.created(uri).body(productDTO);
+                .buildAndExpand(userDTO.id()).toUri();
+        return ResponseEntity.created(uri).body(userDTO);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
+    public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
@@ -65,5 +61,6 @@ public class ProductController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }
     }
+
 
 }

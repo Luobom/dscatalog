@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -75,15 +76,18 @@ public class ProductService {
         }
     }
 
-    @Transactional /*(propagation = Propagation.SUPPORTS)*/
+    @Transactional
     public void delete(Long id) {
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Resource not found with id " + id);
-        }
         try {
+            if (!repository.existsById(id)) {
+                throw new ResourceNotFoundException("Product not found for the given ID: " + id);
+            }
             repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DataBaseException("Integrity violation");
+            throw new DataBaseException("Integrity violation - This Product has dependencies and cannot be deleted.");
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Product not found for the given ID: " + id);
         }
     }
 
