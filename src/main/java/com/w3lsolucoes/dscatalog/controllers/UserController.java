@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> save(@RequestBody UserInsertDTO dto) {
+    public ResponseEntity<UserDTO> save(@Valid @RequestBody UserInsertDTO dto) {
         UserDTO userDTO = service.save(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(userDTO.id()).toUri();
