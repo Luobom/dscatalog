@@ -1,10 +1,12 @@
 package com.w3lsolucoes.dscatalog.dto;
 
+import com.w3lsolucoes.dscatalog.annotations.validation.UserInsertValid;
 import com.w3lsolucoes.dscatalog.entities.User;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@UserInsertValid
 public record UserInsertDTO(
         String firstName,
         String lastName,
