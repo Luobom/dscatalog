@@ -1,5 +1,6 @@
 package com.w3lsolucoes.dscatalog.dto;
 
+import com.w3lsolucoes.dscatalog.annotations.validation.UserUpdateValid;
 import com.w3lsolucoes.dscatalog.entities.User;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@UserUpdateValid
 public record UserDTO(
         Long id,
 

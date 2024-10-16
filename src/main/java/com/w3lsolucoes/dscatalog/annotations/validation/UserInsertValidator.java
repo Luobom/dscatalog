@@ -6,7 +6,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.w3lsolucoes.dscatalog.dto.UserInsertDTO;
-import com.w3lsolucoes.dscatalog.entities.User;
 import com.w3lsolucoes.dscatalog.repositories.UserRepository;
 import com.w3lsolucoes.dscatalog.controllers.handlers.FieldMessage;
 
@@ -34,6 +33,7 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
             list.add(new FieldMessage("email", "Email já existe"));
         }
 
+        // Adiciona violações de validação, se houver
         for (FieldMessage e : list) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(e.getMessage()).addPropertyNode(e.getFieldName())
