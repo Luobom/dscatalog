@@ -3,28 +3,39 @@ package com.w3lsolucoes.dscatalog.services;
 import com.w3lsolucoes.dscatalog.dto.*;
 import com.w3lsolucoes.dscatalog.entities.Role;
 import com.w3lsolucoes.dscatalog.entities.User;
+import com.w3lsolucoes.dscatalog.projections.UserDetailProjection;
 import com.w3lsolucoes.dscatalog.repositories.UserRepository;
 import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.FatalBeanException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository repository;
 
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Transactional(readOnly = true)
     public Page<UserDTO> findAllPaged(Pageable pageable) {
@@ -43,7 +54,7 @@ public class UserService {
     public UserDTO save(UserInsertDTO dto) { // entrance with UserInsertDTO
         User user = new User();
         BeanUtils.copyProperties(dto, user);
-        user.setPassword(new BCryptPasswordEncoder().encode(dto.password()));
+        user.setPassword(passwordEncoder.encode(dto.password()));
         for (RoleDTO roleDTO : dto.roles()) {
             user.getRoles().add(new Role(roleDTO.id(), roleDTO.authority()));
         }
@@ -82,6 +93,26 @@ public class UserService {
             throw new ResourceNotFoundException("User not found for the given ID: " + id);
         }
     }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        List<UserDetailProjection> userDetailProjections = repository.searchUserAndRole(username);
+        if (userDetailProjections.isEmpty()) {
+            throw new UsernameNotFoundException("Email not found");
+        }
+        var user = new User();
+        BeanUtils.copyProperties(userDetailProjections.getFirst(), user);
+        user.setEmail(username);
+
+        if (userDetailProjections.getFirst().getRoleId() != null) {
+            userDetailProjections.forEach(x -> user.addRole(new Role(x.getRoleId(), x.getAuthority())));
+        } else {
+            System.out.println("User has no roles");
+        }
+        return user;
+    }
+
 
 
 }
