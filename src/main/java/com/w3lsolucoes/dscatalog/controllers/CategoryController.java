@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,6 +39,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
         dto = service.insert(dto);
@@ -48,11 +50,13 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id, dto));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object>/*<Void>*/ delete(@PathVariable Long id) {
         service.delete(id);

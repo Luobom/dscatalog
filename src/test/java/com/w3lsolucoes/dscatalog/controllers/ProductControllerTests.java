@@ -1,13 +1,14 @@
 package com.w3lsolucoes.dscatalog.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.w3lsolucoes.dscatalog.factories.Factory;
+import com.w3lsolucoes.dscatalog.utils.Factory;
 import com.w3lsolucoes.dscatalog.services.ProductService;
 import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
@@ -23,7 +24,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductController.class)
+// @WebMvcTest(ProductController.class)
+
+// desabilitar a segurança para testar o controlador
+@WebMvcTest(value = ProductController.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class ProductControllerTests {
 
     @Autowired

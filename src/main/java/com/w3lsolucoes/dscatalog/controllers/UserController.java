@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,16 +28,19 @@ public class UserController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserDTO>> findAll(Pageable pageable) {
         return ResponseEntity.ok(service.findAllPaged(pageable));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<UserDTO> save(@Valid @RequestBody UserInsertDTO dto) {
         UserDTO userDTO = service.save(dto);
@@ -45,11 +49,13 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDTO);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // modo diferente de retornar o status 204 em uma chamada void
     public void delete(@PathVariable Long id) {

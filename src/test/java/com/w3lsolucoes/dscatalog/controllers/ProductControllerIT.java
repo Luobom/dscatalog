@@ -3,7 +3,8 @@ package com.w3lsolucoes.dscatalog.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
-import com.w3lsolucoes.dscatalog.factories.Factory;
+import com.w3lsolucoes.dscatalog.utils.Factory;
+import com.w3lsolucoes.dscatalog.utils.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,13 @@ public class ProductControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
     private Long existingId;
     private Long nonExistingId;
     private ObjectMapper objectMapper;
-
+    private String username, password, bearerToken;
 
 
     @BeforeEach
@@ -38,6 +42,9 @@ public class ProductControllerIT {
         existingId = 1L;
         nonExistingId = 1000L;
         objectMapper = new ObjectMapper();
+        username = "maria@gmail.com";
+        password = "123456";
+        bearerToken = "Bearer " + tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
@@ -63,6 +70,7 @@ public class ProductControllerIT {
 
         ResultActions result =
                 mockMvc.perform(put("/products/{id}", existingId)
+                        .header("Authorization", bearerToken)
                         .content(jsonBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));
@@ -82,6 +90,7 @@ public class ProductControllerIT {
 
         ResultActions result =
                 mockMvc.perform(put("/products/{id}", nonExistingId)
+                        .header("Authorization", bearerToken)
                         .content(jsonBody)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON));

@@ -1,7 +1,7 @@
 package com.w3lsolucoes.dscatalog.repositories;
 
 import com.w3lsolucoes.dscatalog.entities.Product;
-import com.w3lsolucoes.dscatalog.factories.Factory;
+import com.w3lsolucoes.dscatalog.utils.Factory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

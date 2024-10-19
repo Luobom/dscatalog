@@ -3,7 +3,7 @@ package com.w3lsolucoes.dscatalog.services;
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
 import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
 import com.w3lsolucoes.dscatalog.entities.Product;
-import com.w3lsolucoes.dscatalog.factories.Factory;
+import com.w3lsolucoes.dscatalog.utils.Factory;
 import com.w3lsolucoes.dscatalog.repositories.ProductRepository;
 import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
