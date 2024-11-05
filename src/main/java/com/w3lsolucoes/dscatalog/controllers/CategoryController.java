@@ -25,8 +25,8 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll(pageable));
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
     @GetMapping(value = "/search")
