@@ -2,6 +2,7 @@ package com.w3lsolucoes.dscatalog.controllers;
 
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
 import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
+import com.w3lsolucoes.dscatalog.projections.ProductProjection;
 import com.w3lsolucoes.dscatalog.services.ProductService;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
@@ -27,9 +28,19 @@ public class ProductController {
         this.service = service;
     }
 
+//    @GetMapping
+//    public ResponseEntity<Page<ProductMinDTO>> findAll(Pageable pageable) {
+//        return ResponseEntity.status(HttpStatus.OK).body(service.findAllPaged(pageable));
+//    }
+
     @GetMapping
-    public ResponseEntity<Page<ProductMinDTO>> findAll(Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAllPaged(pageable));
+    public ResponseEntity<Page<ProductProjection>> findAll(
+
+            @RequestParam(value = "name", defaultValue = "") String name,
+            @RequestParam(value = "categoryId", defaultValue = "0") String categoryId,
+
+            Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAllPaged(name, categoryId, pageable));
     }
 
     @GetMapping(value = "/search")

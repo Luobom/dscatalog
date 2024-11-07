@@ -16,21 +16,45 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
     // RAW SQL
+//    @Query(nativeQuery = true, value = """
+//            SELECT DISTINCT tb_product.id, tb_product.name
+//            FROM tb_product INNER JOIN tb_product_category ON (tb_product.id = tb_product_category.product_id)
+//            WHERE(:categoryIds IS NULL OR tb_product_category.category_id IN :categoryIds)
+//            AND LOWER(tb_product.name) LIKE LOWER(CONCAT('%', :name, '%'))
+//            ORDER BY tb_product.name ASC
+//            """, countQuery = """
+//            SELECT COUNT(*) FROM (
+//            SELECT DISTINCT tb_product.id, tb_product.name
+//            FROM tb_product INNER JOIN tb_product_category ON (tb_product.id = tb_product_category.product_id)
+//            WHERE(:categoryIds IS NULL OR tb_product_category.category_id IN :categoryIds)
+//            AND LOWER(tb_product.name) LIKE LOWER(CONCAT('%', :name, '%'))
+//            ORDER BY tb_product.name ASC
+//            ) AS result
+//            """)
+
+
+    // RAW SQL
     @Query(nativeQuery = true, value = """
+        SELECT DISTINCT tb_product.id, tb_product.name
+        FROM tb_product 
+        INNER JOIN tb_product_category ON (tb_product.id = tb_product_category.product_id)
+        WHERE (:categoryIds IS NULL OR tb_product_category.category_id IN (:categoryIds))
+        AND LOWER(tb_product.name) LIKE LOWER(CONCAT('%', :name, '%'))
+        ORDER BY tb_product.name ASC
+        """,
+            countQuery = """
+        SELECT COUNT(*) 
+        FROM (
             SELECT DISTINCT tb_product.id, tb_product.name
-            FROM tb_product INNER JOIN tb_product_category ON (tb_product.id = tb_product_category.product_id)
-            WHERE(:categoryIds IS NULL OR tb_product_category.category_id IN :categoryIds)
+            FROM tb_product 
+            INNER JOIN tb_product_category ON (tb_product.id = tb_product_category.product_id)
+            WHERE (:categoryIds IS NULL OR tb_product_category.category_id IN (:categoryIds))
             AND LOWER(tb_product.name) LIKE LOWER(CONCAT('%', :name, '%'))
             ORDER BY tb_product.name ASC
-            """, countQuery = """
-            SELECT COUNT(*) FROM (
-            SELECT DISTINCT tb_product.id, tb_product.name
-            FROM tb_product INNER JOIN tb_product_category ON (tb_product.id = tb_product_category.product_id)
-            WHERE(:categoryIds IS NULL OR tb_product_category.category_id IN :categoryIds)
-            AND LOWER(tb_product.name) LIKE LOWER(CONCAT('%', :name, '%'))
-            ORDER BY tb_product.name ASC
-            ) AS result
-            """)
+        ) AS result
+        """)
+
+
 
 //    // JPQL
 //    @Query("SELECT p FROM Product p JOIN p.categories cats WHERE " +
