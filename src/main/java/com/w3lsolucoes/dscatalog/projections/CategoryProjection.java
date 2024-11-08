@@ -1,8 +1,6 @@
 package com.w3lsolucoes.dscatalog.projections;
 
-import java.util.Set;
-
-public interface ProductProjection {
+public interface CategoryProjection {
     Long getId();
     String getName();
 }

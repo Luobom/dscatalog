@@ -5,6 +5,7 @@ import com.w3lsolucoes.dscatalog.dto.ProductDTO;
 import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
 import com.w3lsolucoes.dscatalog.entities.Category;
 import com.w3lsolucoes.dscatalog.entities.Product;
+import com.w3lsolucoes.dscatalog.projections.ProductCategoryProjection;
 import com.w3lsolucoes.dscatalog.projections.ProductProjection;
 import com.w3lsolucoes.dscatalog.repositories.ProductRepository;
 
@@ -33,9 +34,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductProjection> findAllPaged(String name, String categoryId, Pageable pageable) {
+    public Page<ProductCategoryProjection> findAllPaged(String name, String categoryId, Pageable pageable) {
 
-        List<Long> idsLong = Arrays.asList(categoryId.split(",")).stream().map(Long::parseLong).toList();
+        List<Long> idsLong = Arrays.stream(categoryId.split(",")).map(Long::parseLong).toList();
 
         List<Long> ids = idsLong.getFirst() == 0 ? null : idsLong;
 
