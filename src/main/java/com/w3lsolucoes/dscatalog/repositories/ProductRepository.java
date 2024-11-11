@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     JOIN FETCH p.categories c 
     WHERE (:categoryIds IS NULL OR c.id IN :categoryIds)
     AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
-    ORDER BY p.name ASC
+     
     """)
     Page<ProductCategoryProjection> searchProducts(@Param("categoryIds") List<Long> categoryIds,
                                                    @Param("name") String name,
