@@ -3,7 +3,6 @@ package com.w3lsolucoes.dscatalog.controllers;
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
 import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
 import com.w3lsolucoes.dscatalog.projections.ProductCategoryProjection;
-import com.w3lsolucoes.dscatalog.projections.ProductProjection;
 import com.w3lsolucoes.dscatalog.services.ProductService;
 import com.w3lsolucoes.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;

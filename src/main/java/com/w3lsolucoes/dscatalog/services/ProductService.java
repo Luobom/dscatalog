@@ -6,7 +6,6 @@ import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
 import com.w3lsolucoes.dscatalog.entities.Category;
 import com.w3lsolucoes.dscatalog.entities.Product;
 import com.w3lsolucoes.dscatalog.projections.ProductCategoryProjection;
-import com.w3lsolucoes.dscatalog.projections.ProductProjection;
 import com.w3lsolucoes.dscatalog.repositories.ProductRepository;
 
 import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
