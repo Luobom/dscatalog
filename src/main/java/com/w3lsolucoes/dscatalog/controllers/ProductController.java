@@ -28,11 +28,6 @@ public class ProductController {
         this.service = service;
     }
 
-//    @GetMapping
-//    public ResponseEntity<Page<ProductMinDTO>> findAll(Pageable pageable) {
-//        return ResponseEntity.status(HttpStatus.OK).body(service.findAllPaged(pageable));
-//    }
-
     @GetMapping
     public ResponseEntity<Page<ProductCategoryProjection>> findAll(
 
@@ -53,7 +48,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     @PostMapping
     public ResponseEntity<ProductDTO> save(@Valid @RequestBody ProductDTO dto) {
         ProductDTO productDTO = service.save(dto);
@@ -62,13 +57,13 @@ public class ProductController {
         return ResponseEntity.created(uri).body(productDTO);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // modo diferente de retornar o status 204 em uma chamada void
     public void delete(@PathVariable Long id) {

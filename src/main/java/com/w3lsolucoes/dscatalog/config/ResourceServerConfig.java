@@ -44,22 +44,23 @@ public class ResourceServerConfig {
 		return http.build();
 	}
 
-	@Bean
-	@Order(3)
-	public SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
+    @Bean
+    @Order(3)
+    public SecurityFilterChain rsSecurityFilterChain(HttpSecurity http) throws Exception {
 
-		http.csrf(AbstractHttpConfigurer::disable);
-		http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
-		http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
-		http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
-		return http.build();
-	}
+        http.csrf(AbstractHttpConfigurer::disable);
+        // Exige que qualquer requisição seja autenticada antes de chegar ao controller
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+        http.oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer.jwt(Customizer.withDefaults()));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        return http.build();
+    }
 
 	@Bean
 	public JwtAuthenticationConverter jwtAuthenticationConverter() {
 		JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 		grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-		grantedAuthoritiesConverter.setAuthorityPrefix("");
+        grantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
 
 		JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
 		jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);

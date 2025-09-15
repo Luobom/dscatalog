@@ -2,7 +2,6 @@ package com.w3lsolucoes.dscatalog.controllers;
 
 import com.w3lsolucoes.dscatalog.dto.CategoryDTO;
 import com.w3lsolucoes.dscatalog.services.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,7 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     @PostMapping
     public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto) {
         dto = service.insert(dto);
@@ -50,13 +49,13 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     @PutMapping(value = "/{id}")
     public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id, dto));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_OPERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'OPERATOR')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Object>/*<Void>*/ delete(@PathVariable Long id) {
         service.delete(id);
