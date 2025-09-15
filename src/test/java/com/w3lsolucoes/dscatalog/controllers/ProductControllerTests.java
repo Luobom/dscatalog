@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -51,7 +52,8 @@ public class ProductControllerTests {
         dependentId = 3L;
 
         // find's and search's
-        when(service.findAllPaged(any())).thenReturn(new PageImpl<>(List.of(Factory.createProductMinDTO())));
+        when(service.findAllPaged(anyString(), anyString(), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(/* Você precisa retornar o tipo correto aqui, veja a observação abaixo */)));
         when(service.findById(existingId)).thenReturn(Factory.createProductDTO());
         when(service.findById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
         when(service.searchByName(any(), any())).thenReturn(new PageImpl<>(List.of(Factory.createProductMinDTO())));

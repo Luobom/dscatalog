@@ -17,12 +17,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> searchByName(String name, Pageable pageable);
 
     @Query(value = """
-    SELECT DISTINCT p 
-    FROM Product p 
-    JOIN FETCH p.categories c 
+    SELECT DISTINCT p
+    FROM Product p
+    LEFT JOIN p.categories c
     WHERE (:categoryIds IS NULL OR c.id IN :categoryIds)
     AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
-     
+    """,
+            countQuery = """
+    SELECT COUNT(DISTINCT p)
+    FROM Product p
+    LEFT JOIN p.categories c
+    WHERE (:categoryIds IS NULL OR c.id IN :categoryIds)
+    AND LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
     """)
     Page<ProductCategoryProjection> searchProducts(@Param("categoryIds") List<Long> categoryIds,
                                                    @Param("name") String name,

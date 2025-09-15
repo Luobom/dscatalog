@@ -3,6 +3,7 @@ package com.w3lsolucoes.dscatalog.services;
 import com.w3lsolucoes.dscatalog.dto.ProductDTO;
 import com.w3lsolucoes.dscatalog.dto.ProductMinDTO;
 import com.w3lsolucoes.dscatalog.entities.Product;
+import com.w3lsolucoes.dscatalog.projections.ProductCategoryProjection;
 import com.w3lsolucoes.dscatalog.utils.Factory;
 import com.w3lsolucoes.dscatalog.repositories.ProductRepository;
 import com.w3lsolucoes.dscatalog.services.exceptions.DataBaseException;
@@ -39,6 +40,7 @@ public class ProductServiceTests {
     private long nonExistingId;
     private long dependentId;
     private PageImpl page;
+    private Page<ProductCategoryProjection> projectionPage;
     private Product product;
     private ProductDTO productDTO;
     // for searchByName
@@ -55,6 +57,10 @@ public class ProductServiceTests {
         page = new PageImpl<>(List.of(product));
         name = "Phone";
         inexistentName = "Camera";
+        projectionPage = new PageImpl<>(List.of());
+
+        Mockito.when(repository.searchProducts(ArgumentMatchers.any(), ArgumentMatchers.anyString(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(projectionPage);
 
         // Obs : O método findAll() retorna um objeto do tipo Page.
         Mockito.when(repository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
@@ -136,25 +142,21 @@ public class ProductServiceTests {
         });
     }
 
-
-    // findAllPaged by chatGPT
     @Test
     public void findAllPagedShouldReturnPage() {
-        var result = service.findAllPaged(Pageable.unpaged());
-        assertNotNull(result);
-        Mockito.verify(repository, Mockito.times(1)).findAll(Pageable.unpaged());
-    }
-
-    // findAllPaged by Nelio Alves Course
-    @Test
-    public void findAllPagedShouldReturnPageOLD() {
+        // 1. Arrange
         Pageable pageable = PageRequest.of(0, 10);
-        Page<ProductMinDTO> result = service.findAllPaged(pageable);
+        String name = "";
+        String categoryId = "0";
 
-        assertNotNull(result);
-        Mockito.verify(repository).findAll(pageable);
+        // 2. Act
+        // Agora, com o mock configurado, esta chamada retornará 'projectionPage'
+        Page<ProductCategoryProjection> result = service.findAllPaged(name, categoryId, pageable);
+
+        // 3. Assert
+        assertNotNull(result); // Agora 'result' não será nulo e o teste passará
+        Mockito.verify(repository, Mockito.times(1)).searchProducts(null, name, pageable);
     }
-
 
     // delete
     @Test

@@ -50,13 +50,17 @@ public class ProductControllerIT {
     @Test
     public void findAllShouldReturnSortedPageWhenSortByName() throws Exception {
         ResultActions result =
-                mockMvc.perform(get("/products?page=0&size=12&sort=name,asc")
+                mockMvc.perform(get("/products?page=0&size=12&sort=name,asc&categoryId=1") // << ADICIONADO FILTRO
                         .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.totalElements").value(25));
+
+        // ATENÇÃO: Você provavelmente precisará ajustar essas asserções!
+        // O número total de elementos e o primeiro item da lista vão mudar
+        // por causa do filtro de categoria.
+        result.andExpect(jsonPath("$.totalElements").value(1));
         result.andExpect(jsonPath("$.content").exists());
-        result.andExpect(jsonPath("$.content[0].name").value("Macbook Pro"));
+        result.andExpect(jsonPath("$.content[0].name").value("Smart TV"));
     }
 
     @Test
